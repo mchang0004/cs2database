@@ -6,13 +6,13 @@
 
 // Rarity Color Map for the group headers
 const RARITY_COLORS = {
-    "Covert": "#EB4B4B",         // Red
-    "Classified": "#D32CE6",     // Pink/Purple
-    "Restricted": "#8847FF",     // Blue/Purple
+    "Covert": "#EB4B4B",           // Red
+    "Classified": "#D32CE6",       // Pink/Purple
+    "Restricted": "#8847FF",       // Blue/Purple
     "Mil-Spec Grade": "#4B69FF", // Light Blue
     "Industrial Grade": "#5E98D9",// Darker Blue
-    "Consumer Grade": "#B0C3D9",   // Gray/White
-    "Extraordinary": "#DDAA00",  // Gold/Yellow
+    "Consumer Grade": "#B0C3D9",     // Gray/White
+    "Extraordinary": "#DDAA00",   // Gold/Yellow
     "Contraband": "#FFCC66"
 };
 
@@ -37,8 +37,7 @@ let selectedCondensedGroups = new Map();
 // These functions are called by navbar.js's handleRouting logic.
 
 /**
- * Renders the Home View: Two columns of collection links.
- * This replaces the logic previously in homeCollections.js.
+ * Renders the Home View: Three distinct columns (Case, Other Collections, Souvenir).
  * @param {Array} skinsData - The full skins data array.
  */
 function renderAllCollectionsHome(skinsData) {
@@ -47,88 +46,133 @@ function renderAllCollectionsHome(skinsData) {
     const mainContainer = document.getElementById("allcollections-list");
     if (!mainContainer) return;
 
-    // 1. CLEAR AND STYLE THE MAIN CONTAINER
+    // 1. CLEAR AND STYLE THE MAIN CONTAINER for three responsive columns
     mainContainer.innerHTML = "";
     mainContainer.style.display = "flex";
+    mainContainer.style.flexWrap = "wrap"; // Allows columns to stack on mobile
     mainContainer.style.justifyContent = "space-around";
-    mainContainer.style.gap = "40px";
+    mainContainer.style.gap = "20px"; // Adjusted gap for three columns
     mainContainer.style.padding = "20px 0";
 
-    // 2. CREATE THE TWO COLUMN CONTAINERS
-    const caseColumn = document.createElement('div');
-    caseColumn.style.flex = "1";
-    caseColumn.innerHTML = "<h2>Case Collections</h2>";
+    // 2. CREATE THE THREE COLUMN CONTAINERS
+
+    // Column 1: Cases
+    const caseColumnDiv = document.createElement('div');
+    caseColumnDiv.style.flex = "1";
+    caseColumnDiv.style.minWidth = "300px";
+    caseColumnDiv.innerHTML = "<h2 style='font-size: 24px; color: #E5E7EB; border-bottom: 2px solid #374151; padding-bottom: 5px;'>Case Collections</h2>";
     const caseListContainer = document.createElement('div');
     caseListContainer.style.display = "flex";
     caseListContainer.style.flexDirection = "column";
     caseListContainer.style.gap = "15px";
-    caseColumn.appendChild(caseListContainer);
+    caseColumnDiv.appendChild(caseListContainer);
 
-    const nonCaseColumn = document.createElement('div');
-    nonCaseColumn.style.flex = "1";
-    nonCaseColumn.innerHTML = "<h2>Other Collections</h2>";
-    const nonCaseListContainer = document.createElement('div');
-    nonCaseListContainer.style.display = "flex";
-    nonCaseListContainer.style.flexDirection = "column";
-    nonCaseListContainer.style.gap = "15px";
-    nonCaseColumn.appendChild(nonCaseListContainer);
+    // Column 2: Other Collections (Non-Case, Non-Souvenir)
+    const otherCollectionColumnDiv = document.createElement('div'); // Renamed
+    otherCollectionColumnDiv.style.flex = "1";
+    otherCollectionColumnDiv.style.minWidth = "300px";
+    otherCollectionColumnDiv.innerHTML = "<h2 style='font-size: 24px; color: #E5E7EB; border-bottom: 2px solid #374151; padding-bottom: 5px;'>Other Collections</h2>"; // Updated title
+    const otherListContainer = document.createElement('div'); // Renamed
+    otherListContainer.style.display = "flex";
+    otherListContainer.style.flexDirection = "column";
+    otherListContainer.style.gap = "15px";
+    otherCollectionColumnDiv.appendChild(otherListContainer);
 
-    // 3. DATA FILTERING
+    // Column 3: Souvenir Packages
+    const souvenirColumnDiv = document.createElement('div');
+    souvenirColumnDiv.style.flex = "1";
+    souvenirColumnDiv.style.minWidth = "300px";
+    souvenirColumnDiv.innerHTML = "<h2 style='font-size: 24px; color: #E5E7EB; border-bottom: 2px solid #374151; padding-bottom: 5px;'>Souvenir Packages</h2>";
+    const souvenirListContainer = document.createElement('div');
+    souvenirListContainer.style.display = "flex";
+    souvenirListContainer.style.flexDirection = "column";
+    souvenirListContainer.style.gap = "15px";
+    souvenirColumnDiv.appendChild(souvenirListContainer);
+
+
+    // 3. DATA FILTERING (Updated to match navbar.js mutual exclusivity)
     const caseCollectionsMap = {};
-    const nonCaseCollectionsMap = {};
+    const otherCollectionsMap = {};
+    const souvenirPackagesMap = {};
 
     skinsData.forEach(skin => {
-        // --- CASE COLLECTIONS (Items found in crates) ---
-        if (skin.crates && skin.crates.length > 0 && !skin.souvenir) {
+        const isCase = (skin.crates || []).length > 0;
+
+        // Robustly determine the collection object and name (accounts for array structure)
+        const collection = skin.collection || (skin.collections && skin.collections[0]);
+        const collectionName = collection?.name;
+        const collectionImage = collection?.image || skin.image;
+
+        // Must have a collection name to proceed to Collection/Souvenir grouping
+        if (!collectionName) return;
+
+        // Determine Collection Type: Check flag OR check if the name contains "Souvenir" (case-insensitive)
+        const isSouvenirFlag = skin.souvenir;
+        const isCollectionSouvenir = isSouvenirFlag || collectionName.toLowerCase().includes('souvenir');
+
+        // --- Mutually Exclusive Grouping ---
+
+        // A. Souvenirs: Skins that belong to a Souvenir Collection. (Highest Priority)
+        if (isCollectionSouvenir) {
+             if (!souvenirPackagesMap[collectionName]) {
+                 souvenirPackagesMap[collectionName] = collectionImage;
+             }
+             // Exclude from all other categories
+             return;
+        }
+
+        // B. Cases: Items that drop from a crate.
+        if (isCase) {
             skin.crates.forEach(crate => {
                 if (!caseCollectionsMap[crate.name]) {
-                    caseCollectionsMap[crate.name] = crate.image;
+                    // Cases are grouped by Crate name, not collection name
+                    caseCollectionsMap[crate.name] = crate.image || '';
                 }
             });
         }
 
-        // --- NON-CASE COLLECTIONS (Items with a collection array, but no crates) ---
-        if (skin.collections && skin.collections.length > 0 && (!skin.crates || skin.crates.length === 0)) {
-            skin.collections.forEach(collection => {
-                const name = collection.name;
-                const img = collection.image || skin.image;
-
-                if (!nonCaseCollectionsMap[name]) {
-                    nonCaseCollectionsMap[name] = img;
-                }
-            });
+        // C. Other Collections: Items that belong to a collection but are NOT Souvenirs AND NOT Case Drops.
+        // We ensure exclusivity by checking for !isCase.
+        if (!isCase && !otherCollectionsMap[collectionName]) {
+             // Use the determined 'collection' object for the image
+            otherCollectionsMap[collectionName] = collectionImage;
         }
     });
 
-    // 4. RENDERING HELPER FUNCTION (Modified to use single-page routing)
+
+    // 4. RENDERING HELPER FUNCTION (remains the same)
     const renderList = (map, container) => {
         Object.entries(map).forEach(([name, img]) => {
             const link = document.createElement("a");
             // Use query parameters for routing on the single page
             link.href = `?collection=${encodeURIComponent(name)}`;
 
-            // Add click handler for SPA navigation (called by navbar.js or handleRouting)
+            // Add click handler for SPA navigation
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 window.history.pushState(null, "", link.getAttribute('href'));
-                // Call the router function exposed by navbar.js
+                // Call the router function (exposed globally by navbar.js)
                 if (typeof handleRouting === 'function') handleRouting();
             });
 
             link.style.display = "flex";
             link.style.alignItems = "center";
             link.style.textDecoration = "none";
-            link.style.color = "#8aa89e";
-            link.style.border = "1px solid #333";
+            link.style.color = "#E5E7EB";
+            link.style.border = "1px solid #374151";
             link.style.borderRadius = "10px";
             link.style.padding = "10px";
-            link.style.backgroundColor = "#111";
+            link.style.backgroundColor = "#1F2937";
+            link.style.transition = "background-color 0.2s, border-color 0.2s";
+            link.onmouseover = () => link.style.backgroundColor = "#374151";
+            link.onmouseout = () => link.style.backgroundColor = "#1F2937";
+
 
             const image = document.createElement("img");
             image.src = img;
             image.alt = name;
-            image.style.width = "190px";
-            image.style.height = "150px";
+            image.style.width = "100px";
+            image.style.height = "75px";
             image.style.borderRadius = "5px";
             image.style.marginRight = "20px";
             image.style.objectFit = "cover";
@@ -146,20 +190,25 @@ function renderAllCollectionsHome(skinsData) {
     };
 
     // 5. EXECUTE RENDERING
-    renderList(caseCollectionsMap, caseListContainer);
-    renderList(nonCaseCollectionsMap, nonCaseListContainer);
+    // Sort keys alphabetically before rendering
+    const sortedCaseKeys = Object.keys(caseCollectionsMap).sort();
+    const sortedOtherKeys = Object.keys(otherCollectionsMap).sort();
+    const sortedSouvenirKeys = Object.keys(souvenirPackagesMap).sort();
 
-    // 6. ATTACH THE TWO COLUMNS TO THE MAIN CONTAINER
-    mainContainer.appendChild(caseColumn);
-    mainContainer.appendChild(nonCaseColumn);
+    sortedCaseKeys.forEach(key => renderList({ [key]: caseCollectionsMap[key] }, caseListContainer));
+    sortedOtherKeys.forEach(key => renderList({ [key]: otherCollectionsMap[key] }, otherListContainer));
+    sortedSouvenirKeys.forEach(key => renderList({ [key]: souvenirPackagesMap[key] }, souvenirListContainer));
+
+    // 6. ATTACH THE THREE COLUMNS TO THE MAIN CONTAINER
+    mainContainer.appendChild(caseColumnDiv);
+    mainContainer.appendChild(otherCollectionColumnDiv); // Using the renamed variable
+    mainContainer.appendChild(souvenirColumnDiv);
 }
 
 
 /**
- * Renders the Database View for a specific collection.
- * This replaces the logic previously in collectionsPage.js/showCollectionFromURL.
- * NOTE: The array is passed already filtered by navbar.js
- * * @param {Array} filteredSkins - The skins array already filtered by collection.
+ * Renders the Database View for a specific collection or search results.
+ * @param {Array} filteredSkins - The skins array already filtered by collection.
  * @param {string} collectionName - The name of the collection/search query.
  */
 function renderCollectionPage(filteredSkins, collectionName) {
@@ -185,8 +234,7 @@ function renderCollectionPage(filteredSkins, collectionName) {
 
 /**
  * Generic function to render a list of skins, called by both search and collection views.
- * Renamed to renderSkins (used by renderCollectionPage/performSearch logic).
- * * @param {Array} skins - The array of skins to display.
+ * @param {Array} skins - The array of skins to display.
  * @param {string} containerId - The ID of the container element.
  */
 function renderSkins(skins, containerId) {
@@ -231,7 +279,7 @@ function renderSkins(skins, containerId) {
     });
 
     const condensedGroups = {}; // Knives/Gloves (Taskbar)
-    const regularGroups = {};   // Others (Dropdown)
+    const regularGroups = {};    // Others (Dropdown)
 
     Object.keys(grouped).forEach(group => {
         const isCondensed = grouped[group][0].category?.name === "Knives" || grouped[group][0].category?.name === "Gloves";
@@ -265,13 +313,9 @@ function renderSkins(skins, containerId) {
 // --- INTERNAL RENDERING/HELPER FUNCTIONS ---
 
 /**
- * Ensures the necessary parent elements for the active view exist (not strictly needed
- * now since they are in the HTML, but good for dynamic rendering).
- * @param {string} viewId - 'home-view' or 'database-view'
+ * Ensures the necessary parent elements for the active view exist.
  */
 function ensureViewElements(viewId) {
-    // Since the required sections/divs are now hardcoded in index.html,
-    // this function primarily serves as a placeholder to confirm structure.
     const container = document.getElementById(viewId);
     if (!container) {
         console.error(`Required view section #${viewId} is missing from the HTML.`);
@@ -316,6 +360,9 @@ function renderTaskbarGroup(condensedGroups, mainContainer) {
         btn.style.alignItems = "center";
         btn.style.width = "140px";
         btn.style.height = "120px";
+        btn.onmouseover = () => btn.style.backgroundColor = selectedCondensedGroups.has(groupName) ? "#555" : "#444";
+        btn.onmouseout = () => btn.style.backgroundColor = selectedCondensedGroups.has(groupName) ? "#555" : "#333";
+
 
         const img = document.createElement("img");
         img.src = representativeSkin.image;
@@ -345,6 +392,7 @@ function renderTaskbarGroup(condensedGroups, mainContainer) {
                 btn.style.backgroundColor = "#333";
             } else {
                 selectedCondensedGroups.set(groupName, groupSkins);
+                // Highlight the button when selected
                 btn.style.backgroundColor = "#555";
             }
             updateCentralDropdown();
@@ -399,7 +447,7 @@ function updateCentralDropdown() {
         card.style.padding = "8px";
         card.style.backgroundColor = "#222";
         card.style.borderRadius = "10px";
-        card.style.color = "#8aa89e";
+        card.style.color = "#E5E7EB";
         card.style.width = "180px";
         card.style.display = "flex";
         card.style.flexDirection = "column";
@@ -434,7 +482,7 @@ function renderRegularGroup(groupName, groupSkins, container) {
     section.style.marginBottom = "15px";
 
     const header = document.createElement("div");
-    header.textContent = groupName;
+    header.textContent = `${groupName} (${groupSkins.length})`;
     // Header styling
     header.style.cursor = "pointer";
     header.style.fontWeight = "bold";
@@ -442,11 +490,15 @@ function renderRegularGroup(groupName, groupSkins, container) {
     header.style.backgroundColor = "#222";
     header.style.padding = "8px 12px";
     header.style.borderRadius = "5px";
+    header.style.transition = "background-color 0.2s";
+    header.onmouseover = () => header.style.backgroundColor = "#333";
+    header.onmouseout = () => header.style.backgroundColor = "#222";
+
 
     const skinsList = document.createElement("div");
-    // List styling (Default to visible here for simplicity, or set to 'none' and toggle)
+    // List styling (Default to flex/visible)
     skinsList.style.display = "flex";
-    skinsList.style.marginTop = "5px";
+    skinsList.style.marginTop = "10px";
     skinsList.style.flexWrap = "wrap";
     skinsList.style.gap = "10px";
 
@@ -457,7 +509,7 @@ function renderRegularGroup(groupName, groupSkins, container) {
         card.style.padding = "8px";
         card.style.backgroundColor = "#111";
         card.style.borderRadius = "10px";
-        card.style.color = "#8aa89e";
+        card.style.color = "#E5E7EB";
         card.style.width = "180px";
         card.style.display = "flex";
         card.style.flexDirection = "column";
