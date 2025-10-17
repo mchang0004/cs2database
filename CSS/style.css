@@ -1,0 +1,74 @@
+html, body {
+  height: 100%;
+  font-family: 'Roboto Slab', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #A9A9A9
+
+
+}
+
+
+
+#database-view {
+
+    max-width: 75%;
+    margin-left: 15%;
+    margin-right: 15%;
+    padding: 100 100px; /* 0 top/bottom, 20px left/right */
+}
+
+#allcollections-list{
+  max-width: 75%;
+  margin-left: 25%;
+  margin-right: 25%;
+
+
+}
+
+
+/*
+    ADDITIONS TO YOUR EXTERNAL CSS FILE (e.g., style.css)
+*/
+
+/* 1. Ensure the container holding the items flows correctly */
+/* This is likely #items-container within #database-view */
+#database-view #items-container {
+    /* Set to block to ensure child elements stack vertically */
+    display: block;
+    width: 100%;
+    /* Ensure no flex property is forcing side-by-side layout here */
+}
+
+/* 2. Rarity Group Section (The container for the header and the list) */
+/* This ensures each group occupies its own full row */
+#database-view div { /* Target the div elements inside the view */
+    display: block;
+    width: 100%;
+    box-sizing: border-box; /* Important for padding/margins */
+}
+
+/* 3. Rarity Group Header/Button */
+.rarity-group-header {
+    /* Set to 100% width to span the full row */
+    width: 100%;
+    display: block;
+    box-sizing: border-box; /* Ensures padding/border are inside the 100% width */
+    text-align: left; /* Optional: Align the text if needed */
+}
+
+/* 4. The Central Dropdown (for Knives/Gloves) */
+#central-skins-dropdown {
+    width: 100%;
+    /* Optional: Ensure it has space around it */
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+}
+
+/* 5. The Taskbar Container (Optional styling override) */
+.skin-taskbar-container {
+    width: 100%;
+    box-sizing: border-box;
+}
