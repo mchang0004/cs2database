@@ -36,27 +36,28 @@ const rarityOrder = {
 };
 
 // --------------------------
-// DOM Ready
+// Wait for DOM ready
 // --------------------------
-    document.addEventListener("DOMContentLoaded", async () => {
-        await loadSkins();
-        handleURL(); // initial load from URL
+document.addEventListener("DOMContentLoaded", () => {
+    loadSkins().then(() => {
+        showCollectionFromURL();
     });
+});
 
 // --------------------------
 // Fetch skins JSON
 // --------------------------
-  async function loadSkins() {
-      try {
-          const res = await fetch(SKINS_URL);
-          skinsData = await res.json();
+async function loadSkins() {
+    try {
+        const res = await fetch(SKINS_URL);
+        skinsData = await res.json();
 
-          buildNavbar();
-          renderHomeSkins();
-      } catch (err) {
-          console.error("Error loading skins:", err);
-      }
-  }
+        buildNavbar();
+        renderHomeSkins();
+    } catch (err) {
+        console.error("Error loading skins:", err);
+    }
+}
 
 // --------------------------
 // Build navbar
@@ -109,10 +110,6 @@ function buildNavbar() {
 
     // Search bar
     const searchForm = document.createElement("form");
-
-
-
-
     searchForm.id = "nav-search-form";
     searchForm.style.display = "flex";
     searchForm.style.alignItems = "center";
@@ -131,18 +128,17 @@ function buildNavbar() {
     nav.appendChild(searchForm);
 
     searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const query = searchInput.value.trim().toLowerCase();
-      if (!query) return;
+        e.preventDefault();
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) return;
 
-      const results = skinsData.filter(skin =>
-          skin.name.toLowerCase().includes(query) ||
-          skin.weapon?.name?.toLowerCase().includes(query)
-      );
+        const results = skinsData.filter(skin =>
+            skin.name.toLowerCase().includes(query) ||
+            skin.weapon?.name?.toLowerCase().includes(query)
+        );
 
-      renderSkins(results, "collections-list");
+        renderSkins(results, "collections-list");
     });
-
 
     // Dropdown hover/click behavior
     let timeout;
