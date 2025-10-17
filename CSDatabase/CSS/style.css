@@ -1,0 +1,28 @@
+html, body {
+  height: 100%;
+  font-family: 'Roboto Slab', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #A9A9A9
+
+
+}
+
+
+
+#collections-page {
+
+    max-width: 75%;
+    margin-left: 15%;
+    margin-right: 15%;
+    padding: 100 100px; /* 0 top/bottom, 20px left/right */
+}
+
+#allcollections-list{
+  max-width: 75%;
+  margin-left: 25%;
+  margin-right: 25%;
+
+
+}
