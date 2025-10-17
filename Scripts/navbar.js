@@ -1,13 +1,14 @@
 // --------------------------
-// navbar.js
+// navbar.js (FIXED for GitHub Pages)
 // --------------------------
 
 const SKINS_URL = "https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/api/en/skins.json";
 let skinsData = [];
 
-// Detect if we are on /database/ page
+// Detect if we are on /database/index.html page
+// Use the full path for a more reliable check on GitHub Pages
 const currentPath = window.location.pathname;
-const isDatabasePage = currentPath.toLowerCase().includes("/database");
+const isDatabasePage = currentPath.toLowerCase().includes("/database/index.html");
 
 async function loadSkins() {
     try {
@@ -15,7 +16,7 @@ async function loadSkins() {
         skinsData = await res.json();
         buildNavbar();
 
-        // Handle ?search= query if user opened /database/?search=...
+        // Handle ?search= query if user opened /database/index.html?search=...
         const params = new URLSearchParams(window.location.search);
         const searchQuery = params.get("search");
         const collectionQuery = params.get("collection");
@@ -103,7 +104,8 @@ function buildNavbar() {
 
     Object.keys(collectionsMap).sort().forEach(name => {
         const a = document.createElement("a");
-        a.href = `/database/?collection=${encodeURIComponent(name)}`;
+        // FIX 1: Explicitly include index.html for GitHub Pages routing
+        a.href = `/database/index.html?collection=${encodeURIComponent(name)}`;
         a.textContent = name;
         dropContent.appendChild(a);
     });
@@ -144,7 +146,6 @@ function buildNavbar() {
     searchForm.appendChild(searchBtn);
     nav.appendChild(searchForm);
 
-
     // --------------------------
     // Search Logic (Updated)
     // --------------------------
@@ -153,33 +154,19 @@ function buildNavbar() {
         const query = searchInput.value.trim().toLowerCase();
         if (!query) return;
 
-        // Construct the new URL using the search query
-        const newSearchParams = new URLSearchParams();
-        newSearchParams.set("search", query);
-        const newUrl = `/database/?${newSearchParams.toString()}`;
+        // Construct the new URL path, explicitly using index.html
+        const newUrlPath = `/database/index.html?search=${encodeURIComponent(query)}`;
 
         if (!isDatabasePage) {
             // If not on the database page, navigate there
-            window.location.href = newUrl;
+            window.location.href = newUrlPath;
             return;
         }
 
-        // If already on the database page, update history and perform search
-        // Using replaceState if the URL is the same, or pushState otherwise
-        const currentUrl = window.location.pathname + window.location.search;
+        // FIX 2: Use pushState to update the URL for sequential searches
+        window.history.pushState({ search: query }, "", newUrlPath);
 
-        if (currentUrl === newUrl) {
-            // If the URL is identical (e.g., searching "ak" when already on ?search=ak)
-            // We still need to run performSearch, but no history change is needed.
-            // We can optionally use replaceState to force a history entry update,
-            // though pushState is usually better for a new search action.
-            window.history.replaceState({ search: query }, "", newUrl);
-        } else {
-            // For a genuinely new search query, push a new state.
-            window.history.pushState({ search: query }, "", newUrl);
-        }
-
-        // Call performSearch directly to update content immediately
+        // This is necessary to immediately render results without relying on popstate
         performSearch(query);
     });
 
