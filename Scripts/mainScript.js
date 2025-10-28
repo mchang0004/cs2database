@@ -30,6 +30,165 @@ const rarityOrder = {
     "Consumer Grade": 9
 };
 
+
+function expandDopplerVariants(skins) {
+    // Variant recognition by pattern/phase text
+    const variantMap = {
+        "ruby": "Ruby",
+        "sapphire": "Sapphire",
+        "black pearl": "Black Pearl",
+        "phase 1": "Phase 1",
+        "phase 2": "Phase 2",
+        "phase 3": "Phase 3",
+        "phase 4": "Phase 4",
+        "emerald": "Emerald"
+    };
+
+    // Optional pattern ID fallback mapping (used by CS2 data)
+    const patternIdMap = {
+        415: "Phase 1",
+        416: "Phase 2",
+        417: "Phase 3",
+        418: "Phase 4",
+        419: "Ruby",
+        420: "Sapphire",
+        421: "Black Pearl",
+        568: "Emerald"
+    };
+
+    return skins.map(skin => {
+        const lowerName = skin.name?.toLowerCase() || "";
+        const lowerFinish = (skin.finish || skin.finish_name || skin.phase || "").toLowerCase();
+        let variant = "";
+
+        // Check if it's a Doppler-type skin
+        const isDoppler = lowerName.includes("doppler");
+        if (!isDoppler) return { ...skin, display_name: skin.name };
+
+        // Try to detect from finish text
+        for (const key in variantMap) {
+            if (lowerFinish.includes(key)) {
+                variant = variantMap[key];
+                break;
+            }
+        }
+
+        // Try pattern id fallback
+        if (!variant && skin.pattern && patternIdMap[skin.pattern]) {
+            variant = patternIdMap[skin.pattern];
+        }
+
+        // If still nothing, leave it as plain Doppler
+        if (!variant) variant = "Unknown Variant";
+
+        // Build new display name
+        const displayName = `${skin.name} | ${variant}`;
+
+        // Optionally adjust the image if variant-specific images exist
+        // e.g., /database/collections/Doppler/img/Doppler_Ruby.png
+        let image = skin.image;
+        const variantImagePath = `/database/variants/${skin.name.replace(/\s+/g, "_")}_${variant.replace(/\s+/g, "_")}.png`;
+        // if that path exists in your hosting setup, you can enable this:
+        // image = variantImagePath;
+
+        return {
+            ...skin,
+            display_name: displayName,
+            variant_name: variant,
+            image
+        };
+    });
+}
+
+/**
+ * Renders a "Similar Cases" bar above the collection view
+ * showing all other cases that contain the same knives.
+ * @param {Array} allSkins - The full dataset (needed for case comparison).
+ * @param {Array} currentSkins - The skins in the current collection.
+ * @param {string} containerId - The ID of the database-view container.
+ */
+ function renderSimilarCasesBar(allSkins, currentSkins, containerId) {
+     const currentKnifeNames = new Set(
+         currentSkins
+             .filter(s => s.category?.name === "Knives")
+             .map(s => s.weapon?.name || s.name)
+     );
+
+     if (currentKnifeNames.size === 0) return;
+
+     // Map of caseName -> knifeNames
+     const caseMap = {};
+     allSkins.forEach(skin => {
+         if (skin.crates && skin.category?.name === "Knives") {
+             skin.crates.forEach(crate => {
+                 if (!caseMap[crate.name]) caseMap[crate.name] = new Set();
+                 caseMap[crate.name].add(skin.weapon?.name || skin.name);
+             });
+         }
+     });
+
+     // Find cases with shared knives
+     const similarCases = [];
+     for (const [caseName, knives] of Object.entries(caseMap)) {
+         const overlap = [...knives].some(k => currentKnifeNames.has(k));
+         if (overlap) similarCases.push(caseName);
+     }
+
+     if (similarCases.length <= 1) return;
+
+     const parent = document.getElementById(containerId);
+     if (!parent) return;
+
+     let existingBar = document.getElementById("similar-cases-bar");
+     if (existingBar) existingBar.remove();
+
+     const bar = document.createElement("div");
+     bar.id = "similar-cases-bar";
+     bar.style.display = "flex";
+     bar.style.flexWrap = "wrap";
+     bar.style.gap = "10px";
+     bar.style.padding = "8px";
+     bar.style.margin = "12px 0 20px";
+     bar.style.background = "#151515";
+     bar.style.borderRadius = "8px";
+     bar.style.border = "1px solid #333";
+
+     const title = document.createElement("h3");
+     title.textContent = "Similar Cases:";
+     title.style.color = "#eee";
+     title.style.fontSize = "1rem";
+     title.style.marginRight = "8px";
+     bar.appendChild(title);
+
+     similarCases.sort().forEach(caseName => {
+         const link = document.createElement("a");
+         link.textContent = caseName;
+         link.href = `?collection=${encodeURIComponent(caseName)}`;
+         link.style.color = "#9CA3AF";
+         link.style.textDecoration = "none";
+         link.style.padding = "4px 10px";
+         link.style.border = "1px solid #444";
+         link.style.borderRadius = "5px";
+         link.style.background = "#1E1E1E";
+         link.onmouseover = () => link.style.background = "#333";
+         link.onmouseout = () => link.style.background = "#1E1E1E";
+
+         link.addEventListener("click", e => {
+             e.preventDefault();
+             window.history.pushState(null, "", link.href);
+             if (typeof handleRouting === "function") handleRouting();
+         });
+
+         bar.appendChild(link);
+     });
+
+     parent.prepend(bar);
+ }
+
+
+
+
+
 // Global map to track which condensed groups are currently selected (open)
 let selectedCondensedGroups = new Map();
 
@@ -46,7 +205,7 @@ function renderAllCollectionsHome(skinsData) {
     const mainContainer = document.getElementById("allcollections-list");
     if (!mainContainer) return;
 
-    // 1. CLEAR AND STYLE THE MAIN CONTAINER for three responsive columns
+    //Setup
     mainContainer.innerHTML = "";
     mainContainer.style.display = "flex";
     mainContainer.style.flexWrap = "wrap"; // Allows columns to stack on mobile
@@ -54,9 +213,9 @@ function renderAllCollectionsHome(skinsData) {
     mainContainer.style.gap = "20px"; // Adjusted gap for three columns
     mainContainer.style.padding = "20px 0";
 
-    // 2. CREATE THE THREE COLUMN CONTAINERS
+    // Home Page Coloumns
 
-    // Column 1: Cases
+    //Cases
     const caseColumnDiv = document.createElement('div');
     caseColumnDiv.style.flex = "1";
     caseColumnDiv.style.minWidth = "300px";
@@ -67,7 +226,7 @@ function renderAllCollectionsHome(skinsData) {
     caseListContainer.style.gap = "15px";
     caseColumnDiv.appendChild(caseListContainer);
 
-    // Column 2: Other Collections (Non-Case, Non-Souvenir)
+    //Other Collections
     const otherCollectionColumnDiv = document.createElement('div'); // Renamed
     otherCollectionColumnDiv.style.flex = "1";
     otherCollectionColumnDiv.style.minWidth = "300px";
@@ -78,7 +237,7 @@ function renderAllCollectionsHome(skinsData) {
     otherListContainer.style.gap = "15px";
     otherCollectionColumnDiv.appendChild(otherListContainer);
 
-    // Column 3: Souvenir Packages
+    //Souvenir Packages
     const souvenirColumnDiv = document.createElement('div');
     souvenirColumnDiv.style.flex = "1";
     souvenirColumnDiv.style.minWidth = "300px";
@@ -90,7 +249,6 @@ function renderAllCollectionsHome(skinsData) {
     souvenirColumnDiv.appendChild(souvenirListContainer);
 
 
-    // 3. DATA FILTERING (Updated to match navbar.js mutual exclusivity)
     const caseCollectionsMap = {};
     const otherCollectionsMap = {};
     const souvenirPackagesMap = {};
@@ -98,21 +256,19 @@ function renderAllCollectionsHome(skinsData) {
     skinsData.forEach(skin => {
         const isCase = (skin.crates || []).length > 0;
 
-        // Robustly determine the collection object and name (accounts for array structure)
         const collection = skin.collection || (skin.collections && skin.collections[0]);
         const collectionName = collection?.name;
         const collectionImage = collection?.image || skin.image;
 
-        // Must have a collection name to proceed to Collection/Souvenir grouping
         if (!collectionName) return;
 
-        // Determine Collection Type: Check flag OR check if the name contains "Souvenir" (case-insensitive)
+        // Determine Collection Type / if the name has Souvenir
         const isSouvenirFlag = skin.souvenir;
         const isCollectionSouvenir = isSouvenirFlag || collectionName.toLowerCase().includes('souvenir');
 
         // --- Mutually Exclusive Grouping ---
 
-        // A. Souvenirs: Skins that belong to a Souvenir Collection. (Highest Priority)
+        //Souvenirs
         if (isCollectionSouvenir) {
              if (!souvenirPackagesMap[collectionName]) {
                  souvenirPackagesMap[collectionName] = collectionImage;
@@ -121,7 +277,6 @@ function renderAllCollectionsHome(skinsData) {
              return;
         }
 
-        // B. Cases: Items that drop from a crate.
         if (isCase) {
             skin.crates.forEach(crate => {
                 if (!caseCollectionsMap[crate.name]) {
@@ -131,10 +286,7 @@ function renderAllCollectionsHome(skinsData) {
             });
         }
 
-        // C. Other Collections: Items that belong to a collection but are NOT Souvenirs AND NOT Case Drops.
-        // We ensure exclusivity by checking for !isCase.
         if (!isCase && !otherCollectionsMap[collectionName]) {
-             // Use the determined 'collection' object for the image
             otherCollectionsMap[collectionName] = collectionImage;
         }
     });
@@ -189,7 +341,7 @@ function renderAllCollectionsHome(skinsData) {
         });
     };
 
-    // 5. EXECUTE RENDERING
+
     // Sort keys alphabetically before rendering
     const sortedCaseKeys = Object.keys(caseCollectionsMap).sort();
     const sortedOtherKeys = Object.keys(otherCollectionsMap).sort();
@@ -199,38 +351,83 @@ function renderAllCollectionsHome(skinsData) {
     sortedOtherKeys.forEach(key => renderList({ [key]: otherCollectionsMap[key] }, otherListContainer));
     sortedSouvenirKeys.forEach(key => renderList({ [key]: souvenirPackagesMap[key] }, souvenirListContainer));
 
-    // 6. ATTACH THE THREE COLUMNS TO THE MAIN CONTAINER
     mainContainer.appendChild(caseColumnDiv);
     mainContainer.appendChild(otherCollectionColumnDiv); // Using the renamed variable
     mainContainer.appendChild(souvenirColumnDiv);
 }
 
 
+
+//HOME PAGE END
+
+
 /**
- * Renders the Database View for a specific collection or search results.
- * @param {Array} filteredSkins - The skins array already filtered by collection.
- * @param {string} collectionName - The name of the collection/search query.
+  Collection Page Setup
  */
-function renderCollectionPage(filteredSkins, collectionName) {
-    ensureViewElements('database-view');
+ function renderCollectionPage(filteredSkins, collectionName) {
+     ensureViewElements('database-view');
 
-    const titleEl = document.getElementById("collection-title");
-    const container = document.getElementById("items-container");
+     const titleEl = document.getElementById("collection-title");
+     const container = document.getElementById("items-container");
 
-    container.innerHTML = ""; // Clear the content
+     container.innerHTML = ""; // Clear content
 
-    // Determine the title based on the context
-    let titleText = collectionName.startsWith("Search") ? collectionName : `Collection: ${collectionName}`;
-    titleEl.textContent = titleText;
+     let collectionImage = "";
 
-    if (!filteredSkins || filteredSkins.length === 0) {
-        titleEl.textContent = `No items found for "${collectionName}"`;
-        return;
-    }
+     // Need to filter out cases, because it will default to the "collection" image of the case.
+     const isCase = filteredSkins.some(skin => (skin.crates || []).length > 0);
 
-    // Call the generic renderer
-    renderSkins(filteredSkins, "items-container");
-}
+     if (isCase) {
+         const crateSkin = filteredSkins.find(skin => (skin.crates || []).length > 0);
+         if (crateSkin && crateSkin.crates[0]?.image) {
+             collectionImage = crateSkin.crates[0].image;
+         }
+     } else {
+         // non-cases, don't have a case image. so it uses the collection image as default
+         const collectionObj = filteredSkins[0].collection || (filteredSkins[0].collections && filteredSkins[0].collections[0]);
+         if (collectionObj && collectionObj.image) {
+             collectionImage = collectionObj.image;
+         } else if (filteredSkins[0].image) {
+             collectionImage = filteredSkins[0].image;
+         }
+     }
+
+     titleEl.innerHTML = "";
+     titleEl.style.textAlign = "center"; // Center text
+     titleEl.style.marginBottom = "10px"; // Reduce gap
+
+     if (collectionImage) {
+         const img = document.createElement("img");
+         img.src = collectionImage;
+         img.alt = collectionName;
+         img.style.width = "15%";
+         img.style.height = "13%";
+         img.style.objectFit = "cover";
+         img.style.display = "block";
+         img.style.margin = "0 auto 6px"; // Center and spacing
+         titleEl.appendChild(img);
+     }
+
+     // Render collection name text
+     const textNode = document.createElement("span");
+     textNode.textContent = collectionName;
+     titleEl.appendChild(textNode);
+
+     if (!filteredSkins || filteredSkins.length === 0) {
+         titleEl.textContent = `No items found for "${collectionName}"`;
+         return;
+     }
+
+     // Render the "Similar Cases" bar
+     if (typeof allSkinsData !== "undefined") {
+         renderSimilarCasesBar(allSkinsData, filteredSkins, "database-view");
+     }
+
+     // Then render the skins
+     renderSkins(filteredSkins, "items-container");
+ }
+
+
 
 /**
  * Generic function to render a list of skins, called by both search and collection views.
@@ -238,6 +435,9 @@ function renderCollectionPage(filteredSkins, collectionName) {
  * @param {string} containerId - The ID of the container element.
  */
 function renderSkins(skins, containerId) {
+
+    skins = expandDopplerVariants(skins);
+
     ensureViewElements('database-view');
 
     const container = document.getElementById(containerId);
@@ -248,6 +448,7 @@ function renderSkins(skins, containerId) {
         container.textContent = "No skins found.";
         return;
     }
+
 
     // --- SORTING ---
     skins.sort((a, b) => {
@@ -461,7 +662,7 @@ function updateCentralDropdown() {
         img.loading = "lazy";
 
         const name = document.createElement("p");
-        name.textContent = skin.name;
+        name.textContent = skin.display_name || skin.name;
         name.style.textAlign = "center";
         name.style.fontSize = "14px";
         name.style.color = skin.rarity?.color || "#ccc";
@@ -523,7 +724,7 @@ function renderRegularGroup(groupName, groupSkins, container) {
         img.loading = "lazy";
 
         const name = document.createElement("p");
-        name.textContent = skin.name;
+        name.textContent = skin.display_name || skin.name;
         name.style.textAlign = "center";
         name.style.fontSize = "14px";
         name.style.color = skin.rarity?.color || "#ccc";

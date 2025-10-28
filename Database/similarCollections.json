@@ -1,0 +1,55 @@
+{
+  "Chroma Case": ["Chroma 2 Case", "Chroma 3 Case"],
+  "Chroma 2 Case": ["Chroma Case", "Chroma 3 Case"],
+  "Chroma 3 Case": ["Chroma Case", "Chroma 2 Case"],
+
+  "Gamma Case": ["Gamma 2 Case"],
+  "Gamma 2 Case": ["Gamma Case"],
+
+  "Huntsman Weapon Case": ["Operation Breakout Weapon Case"],
+  "Operation Breakout Weapon Case": ["Huntsman Weapon Case"],
+
+  "CS:GO Weapon Case": ["CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "CS:GO Weapon Case 2": ["CS:GO Weapon Case", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "CS:GO Weapon Case 3": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "eSports 2013 Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "eSports 2013 Winter Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "eSports 2014 Summer Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "Operation Bravo Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "Operation Phoenix Weapon Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "Operation Vanguard Weapon Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
+  "Revolver Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Winter Offensive Weapon Case"],
+  "Winter Offensive Weapon Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case"],
+
+  "Spectrum Case": ["Spectrum 2 Case", "Operation Hydra Case"],
+  "Spectrum 2 Case": ["Spectrum Case", "Operation Hydra Case"],
+
+  "Glove Case": ["Operation Hydra Case"],
+  "Operation Hydra Case": ["Glove Case"],
+
+  "Horizon Case": ["Danger Zone Case"],
+  "Danger Zone Case": ["Horizon Case"],
+
+  "Prisma Case": ["Prisma 2 Case"],
+  "Prisma 2 Case": ["Prisma Case"],
+
+  "Shattered Web Case": ["Fracture Case"],
+  "Fracture Case": ["Shattered Web Case"],
+
+  "Operation Riptide Case": ["Dreams & Nightmares Case"],
+  "Dreams & Nightmares Case": ["Operation Riptide Case"],
+
+  "Kilowatt Case": ["Gallery Case"],
+  "Gallery Case": ["Kilowatt Case"],
+
+  "Shadow Case": [],
+  "Falchion Case": [],
+  "Operation Wildfire Case": [],
+  "CS20 Case": [],
+  "Clutch Case": [],
+  "Glove Case": [],
+  "Operation Broken Fang Case": [],
+  "Snakebite Case": [],
+  "Recoil Case": [],
+  "Revolution Case": []
+}
