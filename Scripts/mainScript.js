@@ -7,12 +7,12 @@
 // Rarity Color Map for the group headers
 const RARITY_COLORS = {
     "Covert": "#EB4B4B",           // Red
-    "Classified": "#D32CE6",       // Pink/Purple
-    "Restricted": "#8847FF",       // Blue/Purple
-    "Mil-Spec Grade": "#4B69FF", // Light Blue
-    "Industrial Grade": "#5E98D9",// Darker Blue
-    "Consumer Grade": "#B0C3D9",     // Gray/White
-    "Extraordinary": "#DDAA00",   // Gold/Yellow
+    "Classified": "#D32CE6",       // Pink
+    "Restricted": "#8847FF",       // Purple
+    "Mil-Spec Grade": "#4B69FF",   // Blue
+    "Industrial Grade": "#5E98D9", // LightBlue
+    "Consumer Grade": "#B0C3D9",   // Gray
+    "Extraordinary": "#DDAA00",    // Gold
     "Contraband": "#FFCC66"
 };
 
@@ -84,8 +84,7 @@ function expandDopplerVariants(skins) {
         // Build new display name
         const displayName = `${skin.name} | ${variant}`;
 
-        // Optionally adjust the image if variant-specific images exist
-        // e.g., /database/collections/Doppler/img/Doppler_Ruby.png
+        
         let image = skin.image;
         const variantImagePath = `/database/variants/${skin.name.replace(/\s+/g, "_")}_${variant.replace(/\s+/g, "_")}.png`;
         // if that path exists in your hosting setup, you can enable this:
@@ -101,11 +100,7 @@ function expandDopplerVariants(skins) {
 }
 
 /**
- * Renders a "Similar Cases" bar above the collection view
  * showing all other cases that contain the same knives.
- * @param {Array} allSkins - The full dataset (needed for case comparison).
- * @param {Array} currentSkins - The skins in the current collection.
- * @param {string} containerId - The ID of the database-view container.
  */
  function renderSimilarCasesBar(allSkins, currentSkins, containerId) {
      const currentKnifeNames = new Set(
@@ -197,7 +192,6 @@ let selectedCondensedGroups = new Map();
 
 /**
  * Renders the Home View: Three distinct columns (Case, Other Collections, Souvenir).
- * @param {Array} skinsData - The full skins data array.
  */
 function renderAllCollectionsHome(skinsData) {
     ensureViewElements('home-view'); // Ensure necessary containers are ready
@@ -743,3 +737,4 @@ function renderRegularGroup(groupName, groupSkins, container) {
     section.appendChild(skinsList);
     container.appendChild(section);
 }
+
