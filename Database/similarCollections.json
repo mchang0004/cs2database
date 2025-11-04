@@ -21,8 +21,8 @@
   "Revolver Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Winter Offensive Weapon Case"],
   "Winter Offensive Weapon Case": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case"],
 
-  "Spectrum Case": ["Spectrum 2 Case"],
-  "Spectrum 2 Case": ["Spectrum Case"],
+  "Spectrum Case": ["Spectrum 2 Case", "Operation Hydra Case"],
+  "Spectrum 2 Case": ["Spectrum Case", "Operation Hydra Case"],
 
   "Glove Case": ["Operation Hydra Case"],
   "Operation Hydra Case": ["Glove Case"],
@@ -53,4 +53,3 @@
   "Recoil Case": [],
   "Revolution Case": []
 }
-
