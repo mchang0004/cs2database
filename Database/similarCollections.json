@@ -5,7 +5,7 @@
 
   "Gamma Case": ["Gamma 2 Case"],
   "Gamma 2 Case": ["Gamma Case"],
-  
+
   "CS:GO Weapon Case": ["CS:GO Weapon Case 2", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
   "CS:GO Weapon Case 2": ["CS:GO Weapon Case", "CS:GO Weapon Case 3", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
   "CS:GO Weapon Case 3": ["CS:GO Weapon Case", "CS:GO Weapon Case 2", "eSports 2013 Case", "eSports 2013 Winter Case", "eSports 2014 Summer Case", "Operation Bravo Case", "Operation Phoenix Weapon Case", "Operation Vanguard Weapon Case", "Revolver Case", "Winter Offensive Weapon Case"],
@@ -44,14 +44,14 @@
 
   "Operation Broken Fang Case": ["Snakebite Case", "Recoil Case"],
   "Snakebite Case": ["Operation Broken Fang Case", "Recoil Case"],
-  "Recoil Case": ["Operation Broken Fang Case", "Snakebite Case"]
+  "Recoil Case": ["Operation Broken Fang Case", "Snakebite Case"],
 
   "Shadow Case": [],
   "Falchion Case": [],
   "Operation Wildfire Case": [],
   "CS20 Case": [],
   "Huntsman Weapon Case": [],
-  "Operation Breakout Weapon Case": [],
+  "Operation Breakout Weapon Case": []
 
 
 }
