@@ -497,7 +497,7 @@ function createSkinCard(skin) {
         backgroundColor: "#222",
         borderRadius: "10px",
         color: "#E5E7EB",
-        width: "10%",
+        width: "180px",
         height: "230px",
         display: "flex",
         flexDirection: "column",
@@ -560,3 +560,4 @@ function createSkinCard(skin) {
 
     return card;
 }
+
