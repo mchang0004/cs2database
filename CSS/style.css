@@ -1,0 +1,499 @@
+html, body {
+  min-height: 100vh;
+  font-family: 'Roboto Slab', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 40px;
+    color: #666;
+    font-size: 14px;
+    border-top: 1px solid #333;
+}
+
+#database-view {
+    max-width: 75%;
+    margin-left: 15%;
+    margin-right: 15%;
+    padding: 0 100px;
+}
+
+#allcollections-list {
+    max-width: 75%;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+#database-view #items-container {
+    display: block;
+    width: 100%;
+}
+
+/* box-sizing reset for all divs inside the main views */
+#database-view div,
+#home-view div {
+    box-sizing: border-box;
+}
+
+/* -- Collection header block -- */
+.collection-header {
+    text-align: center;
+    margin: 0 auto 20px;
+    background-color: #1A1A1A;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    display: inline-block;
+    min-width: 300px;
+}
+
+.collection-header img {
+    width: 100px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.collection-header-name {
+    font-size: 24px;
+    font-weight: bold;
+    color: #E5E7EB;
+}
+
+.collection-market-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 12px;
+    border-radius: 5px;
+    background-color: #2a475e;
+    color: #c7d5e0;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.collection-market-btn:hover { background-color: #66c0f4; }
+
+/* -- Float input row (trade-up tool) -- */
+.float-row {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.float-row label {
+    color: #9CA3AF;
+    font-size: 14px;
+}
+
+.float-row input[type="number"] {
+    width: 120px;
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #1E1E1E;
+    color: #E5E7EB;
+    font-size: 14px;
+    -moz-appearance: textfield;
+}
+
+.float-row input[type="number"]::-webkit-outer-spin-button,
+.float-row input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.float-clear-btn {
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* -- Similar collections bar -- */
+.similar-bar-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#similar-cases-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    margin: 0 0 20px;
+    background: #151515;
+    border-radius: 8px;
+    border: 1px solid #333;
+    align-items: center;
+}
+
+#similar-cases-bar h3 {
+    color: #eee;
+    font-size: 1rem;
+    margin: 0 8px 0 0;
+}
+
+.similar-case-link {
+    color: #9CA3AF;
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: #1E1E1E;
+    font-size: 14px;
+    transition: background 0.15s;
+}
+
+.similar-case-link:hover { background: #333; }
+
+/* -- Knife/glove condensed taskbar -- */
+#condensed-taskbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #1a1a1a;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.condensed-btn {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 140px;
+    height: 120px;
+    transition: background-color 0.2s;
+}
+
+.condensed-btn:hover { background-color: #444; }
+.condensed-btn.selected { background-color: #555; }
+.condensed-btn.selected:hover { background-color: #666; }
+
+.condensed-btn img {
+    width: 80px;
+    height: auto;
+    border-radius: 3px;
+    margin-bottom: 5px;
+}
+
+.condensed-btn span {
+    font-size: 12px;
+    text-align: center;
+    color: #ccc;
+}
+
+/* -- Central knife/glove skin dropdown -- */
+#central-skins-dropdown {
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    padding: 10px;
+    background-color: #111;
+    border: 1px solid #444;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.skins-flex-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+/* -- Rarity group sections -- */
+.rarity-group {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.rarity-group-header {
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #222;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rarity-group-header:hover { background-color: #333; }
+
+.rarity-skins-list {
+    display: flex;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* -- Skin cards -- */
+.skin-card {
+    border: 1px solid #333;
+    padding: 8px;
+    background-color: #222;
+    border-radius: 10px;
+    color: #E5E7EB;
+    width: 180px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.skin-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.skin-card-img {
+    width: 160px;
+    border-radius: 5px;
+    object-fit: contain;
+    height: 120px;
+}
+
+.skin-card-name {
+    text-align: center;
+    font-size: 14px;
+    margin: 5px 0;
+    flex-grow: 1;
+}
+
+.skin-tags {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.skin-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    background-color: #333;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #555;
+    min-width: 16px;
+}
+
+.skin-tag-s  { color: #FFD700; }
+.skin-tag-st { color: #FF8C00; }
+
+.skin-card-float {
+    font-size: 11px;
+    color: #888;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+.skin-card-normalized {
+    font-size: 11px;
+    font-weight: bold;
+    margin: 2px 0 0;
+    text-align: center;
+}
+
+.skin-card-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: auto;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.skin-btn-market {
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #2a475e;
+    color: #c7d5e0;
+    font-size: 12px;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    transition: background-color 0.2s;
+}
+
+.skin-btn-market:hover { background-color: #66c0f4; }
+
+.skin-btn-collection {
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #00f5ab;
+    color: #000;
+    font-size: 12px;
+    width: 100%;
+    transition: background-color 0.15s;
+}
+
+.skin-btn-collection:hover { background-color: #abffe6; }
+
+/* -- Home page layout -- */
+#home-filters {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.home-filter-btn {
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: 1px solid #444;
+    background-color: #1a1a1a;
+    color: #9CA3AF;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.home-filter-btn:hover { background-color: #333; color: #E5E7EB; }
+.home-filter-btn.active { background-color: #333; color: #E5E7EB; border-color: #666; }
+
+.collections-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.collections-column { flex: 1; min-width: 300px; }
+
+.collections-column h2 {
+    font-size: 24px;
+    color: #E5E7EB;
+    border-bottom: 2px solid #374151;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+.collections-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.collection-entry {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #E5E7EB;
+    border: 1px solid #374151;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #1F2937;
+    transition: background-color 0.2s;
+}
+
+.collection-entry:hover { background-color: #374151; }
+
+.collection-entry img {
+    width: 100px;
+    height: 75px;
+    border-radius: 5px;
+    margin-right: 20px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.collection-entry p {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+@media screen and (max-width: 768px) {
+    #database-view {
+        max-width: 100%;
+        margin-left: 2%;
+        margin-right: 2%;
+        padding: 20px 10px;
+    }
+
+    #allcollections-list {
+        max-width: 100%;
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+
+    .collections-column {
+        min-width: 100% !important;
+    }
+
+    .skin-card {
+        width: calc(33.33% - 10px) !important;
+        min-width: 100px !important;
+        height: auto !important;
+        min-height: 220px !important;
+        padding: 5px !important;
+    }
+
+    .skin-card-img {
+        width: 100% !important;
+        height: 70px !important;
+        object-fit: contain !important;
+    }
+
+    .skin-card-name { font-size: 11px !important; }
+    .skin-card-float { font-size: 9px !important; margin-bottom: 2px !important; }
+
+    .skin-card button, .skin-card a {
+        font-size: 10px !important;
+        padding: 4px !important;
+    }
+
+    .condensed-btn {
+        width: calc(33.33% - 10px) !important;
+        min-width: 100px !important;
+        height: auto !important;
+        padding: 5px !important;
+    }
+
+    .condensed-btn img { width: 60px !important; }
+
+    .skins-flex-list,
+    .rarity-skins-list {
+        justify-content: center !important;
+    }
+}
+
